@@ -1,5 +1,6 @@
 fastapi
 uvicorn
 requests
-azure-data-tables
 python-dotenv
+azure-data-tables
+
