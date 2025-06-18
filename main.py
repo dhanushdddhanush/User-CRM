@@ -4,7 +4,7 @@ from zoho_service import (
     generate_auth_url, exchange_code_for_token,
     get_access_token, get_leads, create_lead
 )
-from storage_service import store_refresh_token, get_refresh_token
+from storage_service import store_refresh_token, get_refresh_token, delete_refresh_token
 from fastapi.responses import HTMLResponse, PlainTextResponse
 from fastapi.responses import JSONResponse
 
