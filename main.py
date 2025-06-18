@@ -6,6 +6,7 @@ from zoho_service import (
 )
 from storage_service import store_refresh_token, get_refresh_token
 from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
@@ -62,7 +63,7 @@ def get_user_leads(user_id: str):
 def delete_token(user_id: str):
     try:
         delete_refresh_token(user_id)
-        return {"status": f"Refresh token for user {user_id} deleted."}
+        return JSONResponse(content={"status": f"Refresh token for user {user_id} deleted."}, status_code=200)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error deleting token: {e}")
 
