@@ -21,8 +21,27 @@ def auth_url(user_id: str):
 def oauth_callback(code: str, state: str):
     refresh_token = exchange_code_for_token(code)
     store_refresh_token(state, refresh_token)
-    return RedirectResponse(url="https://teams.microsoft.com") 
 
+    html_content = """
+    <html>
+        <head>
+            <title>Authentication Complete</title>
+        </head>
+        <body>
+            <h3>✅ Authentication successful!</h3>
+            <p>You may now return to the app.</p>
+            <p><strong>You can close this tab.</strong></p>
+        </body>
+    </html>
+    """
+    return HTMLResponse(content=html_content)  
+@app.get("/zoho/auth-status")
+def check_auth_status(user_id: str):
+    
+    refresh_token = get_refresh_token(user_id)
+    if refresh_token:
+        return {"auth_done": True}
+    return {"auth_done": False}
 @app.get("/zoho/get_leads")
 def get_user_leads(user_id: str):
     refresh_token = get_refresh_token(user_id)
