@@ -58,6 +58,13 @@ def get_user_leads(user_id: str):
     access_token = get_access_token(refresh_token)
     leads = get_leads(access_token)
     return JSONResponse(content=leads)
+@app.delete("/zoho/delete_token")
+def delete_token(user_id: str):
+    try:
+        delete_refresh_token(user_id)
+        return {"status": f"Refresh token for user {user_id} deleted."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error deleting token: {e}")
 
 @app.post("/zoho/create_lead")
 async def create_user_lead(user_id: str, request: Request):
