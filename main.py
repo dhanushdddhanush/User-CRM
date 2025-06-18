@@ -5,6 +5,7 @@ from zoho_service import (
     get_access_token, get_leads, create_lead
 )
 from storage_service import store_refresh_token, get_refresh_token
+from fastapi.responses import HTMLResponse, PlainTextResponse
 
 app = FastAPI()
 
@@ -19,8 +20,15 @@ def auth_url(user_id: str):
 
 @app.get("/zoho/callback")
 def oauth_callback(code: str, state: str):
-    refresh_token = exchange_code_for_token(code)
-    store_refresh_token(state, refresh_token)
+    try:
+        refresh_token = exchange_code_for_token(code)
+    except Exception as e:
+        return PlainTextResponse(f"Error exchanging code: {e}", status_code=500)
+
+    try:
+        store_refresh_token(state, refresh_token)
+    except Exception as e:
+        return PlainTextResponse(f"Error storing refresh token: {e}", status_code=500)
 
     html_content = """
     <html>
@@ -34,7 +42,7 @@ def oauth_callback(code: str, state: str):
         </body>
     </html>
     """
-    return HTMLResponse(content=html_content)  
+    return HTMLResponse(content=html_content) 
 @app.get("/zoho/auth-status")
 def check_auth_status(user_id: str):
     
